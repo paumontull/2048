@@ -14,12 +14,15 @@ private:
 	vector<Tile> cells;
 	int _size;
 	int _nCells;
+	int _freeCells;
 	int _maxValue;
 	int _score;
 	
 	void addTiles(int n);
 	
-	void iPush(int curr, int step, int min, int max);
+	void slide(int curr, int step, int min, int max);
+	
+	void merge(int curr, int step, int min, int max);
 	
 	void printTop();
 	
