@@ -6,6 +6,8 @@ Grid::Grid(int size) : _size(size){
 
 	_nCells = _freeCells = size*size;
 
+	_moved = false;
+
 	cells = vector<int>(_nCells);
 
 	srand(time(NULL));
@@ -40,12 +42,16 @@ Grid::~Grid(){}
 void Grid::slide(int start, int step){
 	vector<int> filtered;
 
+	bool firstZero = false;
 	int curr = start;
 	for(int i = 0; i < _size; ++i){
 		if(!cells[curr] == 0){
 			filtered.push_back(cells[curr]);
 			cells[curr] = 0;
+			if(firstZero) _moved = true;
 		}
+		else if(!firstZero) firstZero = true;
+
 		curr += step;
 	}
 
@@ -60,6 +66,7 @@ void Grid::merge(int start, int step){
 	int curr = start;
 	for(int i = 0; i < _size - 1; ++i){
 		if(cells[curr] == cells[curr + step] and cells[curr] != 0){
+			_moved = true;
 			updateScore(cells[curr] *= 2);
 			cells[curr + step] = 0;
 			++_freeCells;
@@ -68,7 +75,8 @@ void Grid::merge(int start, int step){
 	}
 }
 
-void Grid::push(char direction){
+bool Grid::push(char direction){
+	_moved = false;
 	if(direction == 'u'){
 		for(int i = 0; i < _size; ++i){
 			slide(i, _size);
@@ -97,7 +105,8 @@ void Grid::push(char direction){
 			slide(_nCells - 1 - i * _size, -1);
 		}
 	}
-	addTiles(1);
+	if(_moved) addTiles(1);
+	return _moved;
 }
 
 void Grid::updateScore(int val){

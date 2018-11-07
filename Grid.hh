@@ -48,7 +48,7 @@ public:
 
 	/* Modificadores */
 
-	void push(char direction);
+	bool push(char direction);
 	//Pre: 'direction' is one of these characters: 'u'(up), 'd'(down), 'l'(left), 'r'(right)
 	//Post: Every tile has been moved in the 'direction' direction until merging with an equivalent tile, stopping at a different value tile or reaching the edge
 
