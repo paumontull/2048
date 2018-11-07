@@ -6,19 +6,27 @@ Grid::Grid(int size) : _size(size){
 
 	_nCells = _freeCells = size*size;
 
-	cells = vector<Tile>(_nCells);
+	cells = vector<int>(_nCells);
 
 	srand(time(NULL));
 
 	addTiles(2);
+	for(int i = 0; i < _nCells; ++i) updateMax(cells[i]);
 }
 
 void Grid::addTiles(int n){
 	for(int i = 0; i < n and _freeCells > 0; ++i){
-		int pos = rand() % _freeCells;
-		while(!cells[pos].start()){
-			pos = (pos == _nCells - 1) ? 0 : pos + 1;
+		int nthFreeCell = rand() % _freeCells;
+		int pos = 0;
+
+		for(int j = 0; nthFreeCell >= 0 and j < _nCells; ++j){
+			if(cells[j] == 0){
+				pos = j;
+				--nthFreeCell;
+			}
 		}
+
+		cells[pos] = ((rand() % 10) == 9 ? 4 : 2);
 		--_freeCells;
 	}
 }
@@ -29,104 +37,83 @@ Grid::~Grid(){}
 
 /* Modificadores */
 
+void Grid::slide(int start, int step){
+	vector<int> filtered;
+
+	int curr = start;
+	for(int i = 0; i < _size; ++i){
+		if(!cells[curr] == 0){
+			filtered.push_back(cells[curr]);
+			cells[curr] = 0;
+		}
+		curr += step;
+	}
+
+	curr = start;
+	for(int i = 0; i < filtered.size(); ++i){
+		cells[curr] = filtered[i];
+		curr += step;
+	}
+}
+
+void Grid::merge(int start, int step){
+	int curr = start;
+	for(int i = 0; i < _size - 1; ++i){
+		if(cells[curr] == cells[curr + step] and cells[curr] != 0){
+			updateScore(cells[curr] *= 2);
+			cells[curr + step] = 0;
+			++_freeCells;
+		}
+		curr += step;
+	}
+}
+
 void Grid::push(char direction){
 	if(direction == 'u'){
 		for(int i = 0; i < _size; ++i){
-			slide(_nCells - i - 1, -_size, 0, _nCells - i - 1);
-			merge(i, _size, 0, _nCells - i -1);
-			//slide(_nCells - i - 1, -_size, 0, _nCells - i - 1);
+			slide(i, _size);
+			merge(i, _size);
+			slide(i, _size);
 		}
 	}
-	/*
-
-	int start;
-	if(direction == 'u'){
+	else if(direction == 'd'){
 		for(int i = 0; i < _size; ++i){
-			start = _nCells - i - 1;
-			iPush(start, -_size, 0, start);
+			slide(_nCells - 1 - i, -_size);
+			merge(_nCells - 1 - i, -_size);
+			slide(_nCells - 1 - i, -_size);
 		}
-	} else if(direction == 'd'){
+	}
+	else if(direction == 'l'){
 		for(int i = 0; i < _size; ++i){
-			start = 0 + i;
-			iPush(start, _size, start, _nCells - 1);
+			slide(i * _size, 1);
+			merge(i * _size, 1);
+			slide(i * _size, 1);
 		}
-	} else if(direction == 'l'){
+	}
+	else if(direction == 'r'){
 		for(int i = 0; i < _size; ++i){
-			start = _size + i * _size - 1;
-			iPush(start, -1, i * _size, start);
+			slide(_nCells - 1 - i * _size, -1);
+			merge(_nCells - 1 - i * _size, -1);
+			slide(_nCells - 1 - i * _size, -1);
 		}
-	} else if(direction == 'r'){
-		for(int i = 0; i < _size; ++i){
-			start = 0 + i * _size;
-			iPush(start, 1, start, start + _size - 1);
-		}
-	}*/
+	}
 	addTiles(1);
 }
 
-void Grid::slide(int curr, int step, int min, int max){
-	if(curr + step >= min and curr + step <= max){
-		if(cells[curr].isEmpty()) slide(curr + step, step, min, max);
-		else if(cells[curr + step].isEmpty()){
-			cells[curr + step] = cells[curr];
-			cells[curr].kill();
-			slide(curr + step, step, min, max);
-		}
-		else slide(curr + step, step, min, max);
-	}
+void Grid::updateScore(int val){
+	_score += val;
+	updateMax(val);
 }
 
-void Grid::merge(int curr, int step, int min, int max){
-	if(curr + step >= min and curr + step <= max){
-		if(cells[curr].isEmpty()) merge(curr + step, step, min, max);
-		else if(cells[curr + step] == cells[curr]){
-			cells[curr + step].kill();
-			cells[curr].merge();
-			cout << curr << ' ' << curr + step << endl;
-			++_freeCells;
-		}
-		else merge(curr + step, step, min, max);
-	}
+void Grid::updateMax(int val){
+	if(val > _max) _max = val;
 }
-
-// void Grid::iPush(int curr, int step, int min, int max){
-// 	int next = curr + step;
-// 	//print();
-// 	if(next >= min and next <= max){
-// 		if(cells[curr].isEmpty()) iPush(next, step, min, max);
-// 		if(cells[next].isEmpty()){
-// 			cells[next] = cells[curr];
-// 			cells[curr].kill();
-// 			iPush(next, step, min, max);
-// 		}
-// 		if(cells[next] == cells[curr]){
-// 			cells[next].merge();
-// 			cells[curr].kill();
-// 			iPush(next, step, min, max);
-// 		}
-// 		iPush(next + step, step, min, max);
-// 	}
-// }
 
 /* Consultores */
 
 
 
 /* Entrada/Sortida */
-
-void Grid::print(){
-	printTop();
-	for(int i = 0; i < _size; ++i){
-		for(int j = 0; j < _size; ++j){
-			int num;
-			string val = (num = cells[i * _size + j].getValue()) ? to_string(num) : " ";
-			cout << "│ " << std::right << setw(4) << val << ' ';
-		}
-		cout << "│" << endl;
-		if(i < _size - 1) printMid();
-	}
-	printBottom();
-}
 
 void Grid::printTop(){
 	cout << "┌";
@@ -152,4 +139,19 @@ void Grid::printBottom(){
 	cout << "└";
 	for(int i = 1; i < _size; ++i) cout << "──────┴";
 	cout << "──────┘" << endl;
+}
+
+void Grid::print(){
+	cout << endl << _max << "        " << _score << endl << endl;
+	printTop();
+	for(int i = 0; i < _size; ++i){
+		for(int j = 0; j < _size; ++j){
+			int num = cells[i * _size + j];
+			string val = (num == 0) ? " " : to_string(num);
+			cout << "│ " << std::right << setw(4) << val << ' ';
+		}
+		cout << "│" << endl;
+		if(i < _size - 1) printMid();
+	}
+	printBottom();
 }
