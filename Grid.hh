@@ -15,14 +15,23 @@ private:
 	int _nCells;
 	int _freeCells;
 	bool _moved;
+	bool _gameOver;
 	int _max;
 	int _score;
 
+	//Pre: -
+	//Post:	i.p. contains n new tiles with value 2 or 4 with probabilities
+	//		P(2) = 0.9 and P(4) = 0.9). If _freeCells < n only _freeCells tiles
+	//		are added.
 	void addTiles(int n);
 
 	void slide(int start, int step);
 
 	void merge(int start, int step);
+
+	bool mergeCheck(int start, int step);
+
+	bool gameOverCheck();
 
 	void updateScore(int val);
 

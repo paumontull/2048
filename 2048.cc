@@ -2,7 +2,7 @@
 using namespace std;
 
 int main(){
-	Grid g(4);
+	Grid g(5);
 	g.print();
 
 	char direction;
