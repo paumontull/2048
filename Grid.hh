@@ -63,6 +63,10 @@ public:
 
 	/* Consultores */
 
+	bool gameOver();
+
+	vector<int> getGrid();
+
 	/* Entrada/Sortida */
 
 	void print();

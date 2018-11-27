@@ -143,7 +143,13 @@ void Grid::updateMax(int val){
 
 /* Consultores */
 
+bool Grid::gameOver(){
+	return _gameOver;
+}
 
+vector<int> Grid::getGrid(){
+	return cells;
+}
 
 /* Entrada/Sortida */
 
