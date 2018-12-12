@@ -7,7 +7,7 @@ int main(){
 
 	char direction;
 	while(cin >> direction){
-		g.push(direction);
+		if(g.push(direction)) g.addTile();
 		g.print();
 	}
 }

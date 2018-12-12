@@ -19,12 +19,6 @@ private:
 	int _max;
 	int _score;
 
-	//Pre: -
-	//Post:	i.p. contains n new tiles with value 2 or 4 with probabilities
-	//		P(2) = 0.9 and P(4) = 0.9). If _freeCells < n only _freeCells tiles
-	//		are added.
-	void addTiles(int n);
-
 	void slide(int start, int step);
 
 	void merge(int start, int step);
@@ -57,9 +51,19 @@ public:
 
 	/* Modificadores */
 
+	//Pre:	'direction' is one of these characters: 'w'(up), 's'(down),
+	//		'a'(left), 'd'(right).
+	//Post:	Every tile has been moved in the 'direction' direction until merging
+	//		with an equivalent tile, stopping at a different value tile or
+	//		reaching the edge. Returns false if the board wasn't altered and
+	//		true otherwise.
 	bool push(char direction);
-	//Pre: 'direction' is one of these characters: 'u'(up), 'd'(down), 'l'(left), 'r'(right)
-	//Post: Every tile has been moved in the 'direction' direction until merging with an equivalent tile, stopping at a different value tile or reaching the edge
+
+	//Pre: -
+	//Post:	i.p. contains a new tile with value 2 or 4 with probabilities
+	//		P(2) = 0.9 and P(4) = 0.1). Returns false if the board wasn't
+	//		altered and true otherwise.
+	bool addTile();
 
 	/* Consultores */
 

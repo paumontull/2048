@@ -12,12 +12,13 @@ Grid::Grid(int size) : _size(size){
 
 	srand(time(NULL));
 
-	addTiles(2);
+	addTile();
+	addTile();
 	for(int i = 0; i < _nCells; ++i) updateMax(cells[i]);
 }
 
-void Grid::addTiles(int n){
-	for(int i = 0; i < n and _freeCells > 0; ++i){
+bool Grid::addTile(){
+	if(_freeCells > 0){
 		int nthFreeCell = rand() % _freeCells;
 		int pos = 0;
 
@@ -30,7 +31,9 @@ void Grid::addTiles(int n){
 
 		cells[pos] = ((rand() % 10) == 9 ? 4 : 2);
 		--_freeCells;
+		return true;
 	}
+	return false;
 }
 
 /* Destructora per defecte */
@@ -106,7 +109,6 @@ bool Grid::push(char direction){
 				slide(_nCells - 1 - i * _size, -1);
 			}
 		}
-		if(_moved) addTiles(1);
 		if(_freeCells == 0) _gameOver = gameOverCheck();
 	}
 	else cout << "Game Over" << endl;
