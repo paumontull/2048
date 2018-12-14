@@ -1,5 +1,6 @@
 #include "Player.hh"
 #include "MiniMaxTree.hh"
+##include <limits>
 
 class AImSorryDave : public Player{
 private:

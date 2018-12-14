@@ -1,27 +1,32 @@
 #include "AImSorryDave.hh"
 
-void buildTree(int currDepth, int depth, unique_ptr<MiniMaxNode> node){
-	if(currDepth == depth);
+int miniMax(int depth, int alpha, int beta, bool isMaximizer, unique_ptr<MiniMaxNode> node){
+	if(depth == 0){
+		return node->getGrid.getHeur();
+	}
 	else{
 		if(isMaximizer){
-			Grid g = node->getGrid();
-			g.push('w');
-			node->appendChild(make_unique<MiniMaxNode>(g));
 
-			g = node->getGrid();
-			g.push('a');
-			node->appendChild(make_unique<MiniMaxNode>(g));
+			int maxi = numeric_limits<int>::max();
 
-			g = node->getGrid();
-			g.push('s');
-			node->appendChild(make_unique<MiniMaxNode>(g));
+			for(int i = 0; i < 4; ++i){
+				Grid g = node->getGrid();
+				if(g.move(m)){
+					unique_ptr child = make_unique<MiniMaxNode>(g);
 
-			g = node->getGrid();
-			g.push('s');
-			node->appendChild(make_unique<MiniMaxNode>(g));
+					node->appendChild(child);
+
+					maxi = max(maxi, miniMax(depth - 1, alpha, beta, false, child));
+
+					return maxi;
+				}
+			}
 		}
 		else{
-			
+			for(int i = 0; i < node->getGrid().getFreeCells(); ++i){
+				Grid g = node->getGrid();
+				
+			}
 		}
 	}
 }
