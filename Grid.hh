@@ -1,3 +1,6 @@
+#ifndef Grid_hh
+#define Grid_hh
+
 #include <vector>
 #include <iostream>
 #include <iomanip>
@@ -31,11 +34,11 @@ private:
 
 	void updateMax(int val);
 
-	void printTop();
+	void printTop() const;
 
-	void printMid();
+	void printMid() const;
 
-	void printBottom();
+	void printBottom() const;
 
 public:
 
@@ -67,12 +70,12 @@ public:
 
 	/* Consultores */
 
-	bool gameOver();
-
-	vector<int> getGrid();
+	bool gameOver() const;
 
 	/* Entrada/Sortida */
 
-	void print();
+	void print() const;
 
 };
+
+#endif

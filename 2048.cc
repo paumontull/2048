@@ -1,13 +1,25 @@
-#include "Grid.hh"
+#include "Player.hh"
+#include "Human.hh"
+#include "AImSorryDave.hh"
 using namespace std;
 
-int main(){
-	Grid g(4);
-	g.print();
+int main(int argc, char** argv){
+	if(argc != 2) return -1;
 
-	char direction;
-	while(cin >> direction){
-		if(g.push(direction)) g.addTile();
-		g.print();
+	Human h;
+	AImSorryDave ai;
+	Player* player;
+
+	if(argv[1][0] == 'h'){
+		player = &h;
+	}
+	else if(argv[1][0] == 'a'){
+		player = &ai;
+	}
+
+	Grid g(4);
+
+	while(not g.gameOver()){
+		if(g.push(player->move(g))) g.addTile();
 	}
 }

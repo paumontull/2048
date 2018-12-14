@@ -145,17 +145,13 @@ void Grid::updateMax(int val){
 
 /* Consultores */
 
-bool Grid::gameOver(){
+bool Grid::gameOver() const{
 	return _gameOver;
-}
-
-vector<int> Grid::getGrid(){
-	return cells;
 }
 
 /* Entrada/Sortida */
 
-void Grid::printTop(){
+void Grid::printTop() const{
 	cout << "┌";
 	for(int i = 1; i < _size; ++i) cout << "──────┬";
 	cout << "──────┐" << endl;
@@ -165,7 +161,7 @@ void Grid::printTop(){
 	cout << "      │" << endl;
 }
 
-void Grid::printMid(){
+void Grid::printMid() const{
 	cout << "├";
 	for(int i = 1; i < _size; ++i) cout << "──────┼";
 	cout << "──────┤" << endl;
@@ -175,13 +171,13 @@ void Grid::printMid(){
 	cout << "      │" << endl;
 }
 
-void Grid::printBottom(){
+void Grid::printBottom() const{
 	cout << "└";
 	for(int i = 1; i < _size; ++i) cout << "──────┴";
 	cout << "──────┘" << endl;
 }
 
-void Grid::print(){
+void Grid::print() const{
 	cout << endl << _max << "        " << _score << endl << endl;
 	printTop();
 	for(int i = 0; i < _size; ++i){
