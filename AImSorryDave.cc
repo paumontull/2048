@@ -1,48 +1,64 @@
 #include "AImSorryDave.hh"
 
-int miniMax(int depth, int alpha, int beta, bool isMaximizer, unique_ptr<MiniMaxNode> node){
-	if(depth == 0){
-		return node->getGrid.getHeur();
+int miniMax(int depth, int alpha, int beta, bool isMaximizer, Grid g){
+	if(depth == 0 or g.gameOver()){
+		return g.getHeur();
+	}
+	else if(isMaximizer){
+		int v = numeric_limits<int>::min();
+
+		for (int i = 0; v < beta and i < 4; ++i){
+			Grid h = Grid(g);
+			if(h.move(i)){
+				int w = miniMax(depth - 1, alpha, beta, false, h);
+				if(v < w) v = w;
+				alpha = max(alpha, v);
+			}
+		}
+		return v;
 	}
 	else{
-		if(isMaximizer){
+		int v = numeric_limits<int>::max();
 
-			int maxi = numeric_limits<int>::max();
+		Grid h = Grid(g);
+		int n = h.getFreeCells();
+		int i = 0;
+		bool alt = true;
 
-			for(int i = 0; i < 4; ++i){
-				Grid g = node->getGrid();
-				if(g.move(m)){
-					unique_ptr child = make_unique<MiniMaxNode>(g);
-
-					node->appendChild(child);
-
-					maxi = max(maxi, miniMax(depth - 1, alpha, beta, false, child));
-
-					return maxi;
-				}
+		while(v > alpha and i < n){
+			if(alt) h.addTile(2, i);
+			else{
+				h.addTile(4, i);
+				++i;
 			}
+
+			v = min(v, miniMax(depth - 1, alpha, beta, true, h));
+			beta = min(beta, v);
+
+			alt = not alt;
+			h = Grid(g);
 		}
-		else{
-			for(int i = 0; i < node->getGrid().getFreeCells(); ++i){
-				Grid g = node->getGrid();
-				
-			}
-		}
+		return v;
 	}
 }
 
 char AImSorryDave::move(const Grid& g){
+	int alpha, beta, v, m;
+	v = alpha = numeric_limits<int>::min();
+	beta = numeric_limits<int>::max();
+	m = -1;
 
-	g.print();
-
-	root = make_unique<MiniMaxNode>(g);
-
-	int depth = 4;
-
-	for(int i = 0; i <= depth; ++i){
-
+	for (int i = 0; i < 4; ++i){
+		Grid h = Grid(g);
+		if(h.move(i)){
+			int w = max(v, miniMax(6, alpha, beta, false, h));
+			if(v < w){
+				v = w;
+				m = i;
+			}
+			alpha = max(alpha, v);
+		}
 	}
 
-
-	return 'w';
+	return intToChar(m);
 }

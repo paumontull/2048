@@ -1,13 +1,18 @@
+#include "Grid.hh"
+#include <memory>
+
 class MiniMaxNode{
 private:
 
 	Grid _g;
-	vector<unique_ptr<MiniMaxNode>> children;
+	vector<shared_ptr<MiniMaxNode>> children;
 
 public:
 
-	MiniMaxNode(const Grid& g);
+	MiniMaxNode(const Grid g);
 
-	void appendChild(unique_ptr<MiniMaxNode>);
+	void appendChild(shared_ptr<MiniMaxNode> child);
 
-}
+	Grid getGrid() const;
+
+};
